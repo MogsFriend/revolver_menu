@@ -1,0 +1,58 @@
+<style>
+    .top {font-size:64px; font-weight:bold;}
+    .btnarea {border-radius:50%; width:1000px; height:1000px; background:#EEE; position:fixed; right:-500px; bottom:-500px; overflow-y:scroll; box-shadow:inset 0px 0px 20px rgba(0,0,0,0.1);}
+    .virtualheight {height:2400px;}
+    .innercircle {border-radius:50%; position:fixed; right:-280px; bottom:-280px; width:560px; height:560px; background:#FFF; box-shadow:0px 0px 20px rgba(0,0,0,0.1); pointer-events:none;}
+    .bar {width:1px; height:390px; position:absolute; left:280px; top:-110px; transform-origin:50% 100%; visibility:hidden;}
+    .moveitem {position:fixed; width:72px; height:72px; border-radius:50%;  background:#FFF; box-shadow:0px 0px 10px rgba(0,0,0,0.1); bottom:-100px; right:-100px}
+    .moveitem::after {position:absolute; left:50%; top:100%; height:32px; width:140px; margin-left:-70px; text-align:center; content:attr(data-linked); display:block; font-size:20px; font-weight:bold;}
+</style>
+<meta name="viewport" content="width=640, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<div class="top"></div>
+<div class="btnarea">
+    <div class="virtualheight"></div>
+    <div class="innercircle" style="transform:rotate(-20deg);">
+        <div class="bar"><div class="actualpos" data-snap="btnA"></div></div>
+        <div class="bar" style="transform:rotate(-20deg);"><div class="actualpos" data-snap="btnB"></div></div>
+        <div class="bar" style="transform:rotate(-40deg);"><div class="actualpos" data-snap="btnC"></div></div>
+        <div class="bar" style="transform:rotate(-60deg);"><div class="actualpos" data-snap="btnD"></div></div>
+        <div class="bar" style="transform:rotate(-80deg);"><div class="actualpos" data-snap="btnE"></div></div>
+        <div class="bar" style="transform:rotate(-100deg);"><div class="actualpos" data-snap="btnF"></div></div>
+        <div class="bar" style="transform:rotate(-120deg);"><div class="actualpos" data-snap="btnG"></div></div>
+        <div class="bar" style="transform:rotate(-140deg);"><div class="actualpos" data-snap="btnH"></div></div>
+    </div>
+<div class="moveitem" data-linked="btnA"></div>
+<div class="moveitem" data-linked="btnB"></div>
+<div class="moveitem" data-linked="btnC"></div>
+<div class="moveitem" data-linked="btnD"></div>
+<div class="moveitem" data-linked="btnE"></div>
+<div class="moveitem" data-linked="btnF"></div>
+<div class="moveitem" data-linked="btnG"></div>
+<div class="moveitem" data-linked="btnH"></div>
+</div>
+<script>
+    document.querySelector(".btnarea").addEventListener("scroll", e =>
+    {
+        let scrollmax = document.querySelector(".btnarea").scrollHeight / 2 + 100;
+        document.querySelector(".innercircle").style.transform = "rotate(" + (90 * ((document.querySelector(".btnarea").scrollTop / scrollmax)) - 22.5).toFixed(2) + "deg)";
+        // console.log(document.querySelector(".actualpos").getBoundingClientRect().left);
+        linker();
+    });
+    linker();
+
+    function linker()
+    {
+        document.querySelectorAll(".moveitem").forEach(e =>
+        {
+            let link = document.querySelector(".actualpos[data-snap=" + e.getAttribute("data-linked") + "]");
+            if (link != undefined)
+            {
+                e.style.right = e.style.bottom = "auto";
+                e.style.left = link.getBoundingClientRect().left - 36 + "px";
+                e.style.top = link.getBoundingClientRect().top - 36 + "px";
+            }
+        })
+    }
+</script>
